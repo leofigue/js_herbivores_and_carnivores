@@ -14,14 +14,8 @@ class Animal {
 
   // Remove animal from alive if health <= 0
   checkHealth() {
-    if (this.health <= 0) {
-      // Remove from Animal.alive
-      const index = Animal.alive.indexOf(this);
-
-      if (index !== -1) {
-        Animal.alive.splice(index, 1);
-      }
-    }
+    // Use filter to remove dead animals from alive array
+    Animal.alive = Animal.alive.filter((animal) => animal.health > 0);
   }
 }
 
@@ -38,23 +32,15 @@ class Herbivore extends Animal {
 
 class Carnivore extends Animal {
   bite(target) {
-    // Only affects Herbivore, not Carnivore
-    if (!(target instanceof Herbivore)) {
-      return;
+    if (target instanceof Herbivore && !target.hidden) {
+      target.health -= 50;
+
+      if (target.health < 0) {
+        target.health = 0;
+      }
+
+      target.checkHealth();
     }
-
-    // Does nothing if target is hidden
-    if (target.hidden) {
-      return;
-    }
-
-    target.health -= 50;
-
-    if (target.health < 0) {
-      target.health = 0; // don't go negative
-    }
-
-    target.checkHealth();
   }
 }
 
